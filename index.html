@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Masked Vector Model — Chapter 1, Interactive</title>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+    background: #fafaf7;
+    color: #1a1a1a;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+  }
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 56px 24px 120px;
+  }
+  header {
+    border-bottom: 1px solid #e5e5e0;
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+  }
+  h1 {
+    font-size: 2.1rem;
+    margin: 0 0 6px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .subtitle {
+    color: #6a6a65;
+    margin: 0;
+    font-size: 1rem;
+  }
+  h2 {
+    font-size: 1.45rem;
+    margin: 56px 0 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 22px 0 8px;
+    font-weight: 600;
+    color: #2d2d2d;
+  }
+  p { margin: 12px 0; }
+  em.var { font-style: italic; font-family: "STIX Two Math", Georgia, serif; }
+  .eq {
+    font-family: "STIX Two Math", "Cambria Math", Georgia, serif;
+    background: #f1efe8;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin: 16px 0;
+    text-align: center;
+    font-size: 1.1rem;
+    overflow-x: auto;
+  }
+  .demo {
+    background: #fff;
+    border: 1px solid #e5e5e0;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 24px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .controls {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  button {
+    background: #2d5fb5;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
+    font-family: inherit;
+  }
+  button:hover { background: #234a93; }
+  button:disabled { background: #b0b0a8; cursor: not-allowed; }
+  button.secondary { background: #d97a3d; }
+  button.secondary:hover { background: #b8632e; }
+  button.ghost {
+    background: transparent;
+    color: #2d5fb5;
+    border: 1px solid #2d5fb5;
+  }
+  button.ghost:hover { background: #eff3fa; }
+  label {
+    font-size: 0.9rem;
+    color: #4a4a45;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  input[type="range"] { width: 130px; accent-color: #2d5fb5; }
+  .value-readout {
+    display: inline-block;
+    min-width: 38px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: #2d5fb5;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.85rem;
+  }
+  .vector-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 14px;
+    align-items: center;
+    margin: 10px 0;
+  }
+  .vector-label {
+    font-family: "STIX Two Math", Georgia, serif;
+    font-size: 1.1rem;
+    text-align: right;
+    color: #2d2d2d;
+    font-style: italic;
+  }
+  .vector-cells {
+    display: flex;
+    gap: 2px;
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+  .cell {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 22px;
+    background: #efeee8;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .cell.highlight {
+    outline: 2px solid #1a1a1a;
+    outline-offset: 1px;
+  }
+  .result-box {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: #f7f5ee;
+    border-left: 3px solid #2d5fb5;
+    border-radius: 4px;
+    font-size: 0.95rem;
+  }
+  .result-box.recomb { border-left-color: #d97a3d; }
+  .result-box .stat {
+    font-family: "SF Mono", Menlo, monospace;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    margin: 16px 0 8px;
+    background: #fff;
+    border-radius: 4px;
+  }
+  .legend {
+    display: flex;
+    gap: 18px;
+    font-size: 0.85rem;
+    color: #4a4a45;
+    margin: 8px 0 4px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .note {
+    font-size: 0.85rem;
+    color: #6a6a65;
+    margin: 8px 0;
+  }
+  .toc {
+    background: #f1efe8;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 32px;
+  }
+  .toc ol {
+    margin: 8px 0 0;
+    padding-left: 22px;
+    columns: 2;
+    column-gap: 24px;
+    font-size: 0.92rem;
+  }
+  .toc a {
+    color: #2d5fb5;
+    text-decoration: none;
+  }
+  .toc a:hover { text-decoration: underline; }
+  .footnote {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e0;
+    font-size: 0.85rem;
+    color: #6a6a65;
+  }
+  .pair-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0;
+    font-family: "STIX Two Math", Georgia, serif;
+    font-size: 1rem;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #eff3fa;
+    color: #2d5fb5;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: -apple-system, sans-serif;
+  }
+  .badge.warm {
+    background: #fbf0e6;
+    color: #b8632e;
+  }
+  blockquote {
+    border-left: 3px solid #d97a3d;
+    margin: 16px 0;
+    padding: 6px 18px;
+    color: #4a4a45;
+    background: #fdfaf3;
+    font-size: 0.95rem;
+  }
+  .probe-row {
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+  .probe-row:hover { background: #f5f3ec; }
+  .probe-row.selected { background: #eff3fa; }
+  .probe-row.selected.recomb-sel { background: #fbf0e6; }
+  @media (max-width: 600px) {
+    .toc ol { columns: 1; }
+    .vector-row { grid-template-columns: 60px 1fr; }
+    .vector-label { font-size: 0.95rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>The Masked Vector Model</h1>
+  <p class="subtitle">An interactive walk through Chapter&nbsp;1 of <em>Relational influence on item and associative recognition</em> (Barra Rodriguez, 2024)</p>
+</header>
+
+<div class="toc">
+  <strong>Sections</strong>
+  <ol>
+    <li><a href="#intro">Why static items are not enough</a></li>
+    <li><a href="#vectors">Items as vectors</a></li>
+    <li><a href="#bag">The bag problem</a></li>
+    <li><a href="#mask">The mask</a></li>
+    <li><a href="#encoding">Masked encoding</a></li>
+    <li><a href="#retrieval">Retrieval: intact vs. recombined</a></li>
+    <li><a href="#sim">Run the full simulation</a></li>
+    <li><a href="#predictions">Behavioral predictions</a></li>
+  </ol>
+</div>
+
+<section id="intro">
+<h2>1. Why static items are not enough</h2>
+<p>A homonym such as <em>CALF</em> can mean "baby cow" or "leg muscle." Which interpretation pops to mind depends on what you saw it next to: <em>COW–CALF</em> evokes the animal; <em>MUSCLE–CALF</em> evokes the body part. Decades of work (Light &amp; Carter-Sobell, 1970; Schvaneveldt et al., 1976; Tulving &amp; Thomson, 1973; and many others) shows that the same word leaves different traces in memory depending on context.</p>
+<p>Yet most computational models of memory treat each word as a <em>fixed</em> vector — the same bundle of features every time. Caplan (2023) proposed <strong>attentional subsetting</strong>: knowledge is high-dimensional, but only a small, context-dependent subset of features is active at any moment. <strong>Relational influence</strong> (Caplan, Chakravarty, &amp; Dittmann, 2022) is one mechanism that selects which subset: when items <em>A</em> and <em>B</em> appear together, <em>A</em> picks out a distinctive set of <em>B</em>'s features that may not have lit up otherwise.</p>
+<p>The thesis tests this idea behaviorally. Before getting to the experiments, Chapter&nbsp;1 builds the model that generates the predictions. That's what we'll explore here.</p>
+</section>
+
+<section id="vectors">
+<h2>2. Items as vectors</h2>
+<p>An item is a column vector of <em class="var">n</em> dimensions. Each dimension is a feature — its value drawn from a Gaussian with mean 0 and variance <em class="var">1/n</em>. The vector is essentially unique by virtue of its high dimensionality.</p>
+
+<div class="demo">
+  <div class="controls">
+    <button id="btn-regen-vec">Generate two new items</button>
+  </div>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(45,95,181,0.7)"></span>positive value</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(217,122,61,0.7)"></span>negative value</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:#efeee8"></span>near zero</span>
+  </div>
+  <div id="vec-display"></div>
+  <p class="note">Each item is a fresh Gaussian draw. Note that the two vectors are essentially uncorrelated — their inner product is close to zero.</p>
+  <div class="result-box">
+    inner product <span class="stat" id="vec-dot">—</span>
+  </div>
+</div>
+</section>
+
+<section id="bag">
+<h2>3. The bag problem</h2>
+<p>The classical vector model encodes a list as the sum of its item vectors:</p>
+<div class="eq"><strong>m</strong> = <strong>f</strong><sub>1</sub> + <strong>f</strong><sub>2</sub> + … + <strong>f</strong><sub>L</sub></div>
+<p>This works for <em>item recognition</em> — to test whether a probe was studied, take the inner product with <strong>m</strong>; the more the probe overlaps with the bag, the higher the match.</p>
+<p>But for <em>pair recognition</em> it fails. Suppose you study two pairs, <em>A–B</em> and <em>C–D</em>:</p>
+<div class="eq"><strong>m</strong> = <strong>a</strong> + <strong>b</strong> + <strong>c</strong> + <strong>d</strong></div>
+<p>Vector addition is commutative. The bag is identical whether the pairs were <em>A–B, C–D</em> or <em>A–D, C–B</em>. The pairing information is gone the moment vectors are summed. So a recombined probe like <em>A–D</em> matches just as well as the genuine pair <em>A–B</em>. <strong>Chance performance.</strong></p>
+
+<div class="demo">
+  <div class="controls">
+    <button id="btn-bag-regen">Generate four new items</button>
+  </div>
+  <div id="bag-display"></div>
+</div>
+
+<blockquote>This is why the matrix model was invented. Outer products <strong>g f</strong><sup>⊤</sup> preserve "g on the left, f on the right" — a sum can't.</blockquote>
+<p>The masked vector model takes a different route. Rather than adding explicit binding machinery, it lets the items themselves <em>change shape</em> when paired.</p>
+</section>
+
+<section id="mask">
+<h2>4. The mask</h2>
+<p>For each studied pair {<em class="var">g<sub>i</sub></em>, <em class="var">f<sub>i</sub></em>}, define a binary mask <em class="var">w<sub>ii</sub></em> — a vector of 0s and 1s. A 1 means "this feature is active for this pair"; a 0 means "this feature is silent here." The proportion of 1s is a free parameter, <em class="var">p</em>.</p>
+<p>The mask is the relational fingerprint: it captures the subset of <em class="var">f<sub>i</sub></em>'s features that get activated <em>specifically because</em> <em class="var">g<sub>i</sub></em> was sitting next to it.</p>
+
+<div class="demo">
+  <div class="controls">
+    <label>sparsity <em class="var">p</em>: <input type="range" id="mask-p" min="0.1" max="0.9" step="0.05" value="0.5"><span class="value-readout" id="mask-p-val">0.50</span></label>
+    <button id="btn-regen-mask">Regenerate</button>
+  </div>
+  <div id="mask-display"></div>
+  <p class="note">Top: the raw item <em class="var">f</em>. Middle: the mask <em class="var">w</em> (orange = 1, faded = 0). Bottom: the masked item <em class="var">f</em> ⊗ <em class="var">w</em> — only the features the mask permits survive.</p>
+</div>
+</section>
+
+<section id="encoding">
+<h2>5. Masked encoding</h2>
+<p>To encode a list of <em class="var">L</em> pairs, sum the masked pair-vectors:</p>
+<div class="eq"><strong>m</strong> = Σ<sub><em>i</em>=1</sub><sup><em>L</em></sup> (<strong>g</strong><sub><em>i</em></sub> + <strong>f</strong><sub><em>i</em></sub>) ⊗ <strong>w</strong><sub><em>ii</em></sub></div>
+<p>Each pair contributes to the bag, but only in the dimensions its own mask selects. The bag now has structure: dimensions that pair 1 wrote into, dimensions that pair 2 wrote into, etc., with overlap depending on the masks.</p>
+
+<div class="demo">
+  <div class="controls">
+    <label>list length <em class="var">L</em>: <input type="range" id="enc-L" min="2" max="6" step="1" value="3"><span class="value-readout" id="enc-L-val">3</span></label>
+    <label>sparsity <em class="var">p</em>: <input type="range" id="enc-p" min="0.2" max="0.8" step="0.05" value="0.5"><span class="value-readout" id="enc-p-val">0.50</span></label>
+    <button id="btn-encode">Build the memory trace</button>
+  </div>
+  <div id="enc-display"></div>
+</div>
+</section>
+
+<section id="retrieval">
+<h2>6. Retrieval: intact vs. recombined</h2>
+<p>At test, the model is probed with a pair. If the pair's left and right items were studied together, it's <em>intact</em>; if they came from different studied pairs, it's <em>recombined</em>. The matching strength is</p>
+<div class="eq"><em>s</em> = <strong>m</strong> · ((<strong>g</strong> + <strong>f</strong>) ⊗ <strong>w</strong>)</div>
+<p>For an <strong>intact</strong> probe, the same mask <em class="var">w<sub>ii</sub></em> that wrote into the bag is used to read it out. The dimensions match → high inner product.</p>
+<p>For a <strong>recombined</strong> probe, the mask that would govern this never-studied pairing (<em class="var">w<sub>ji</sub></em>) is different — it picks out different dimensions than what was actually written into the bag for this pair. Most of the dimensions the probe is "looking at" contain near-zero values → low inner product → correct rejection.</p>
+
+<div class="demo">
+  <div class="controls">
+    <button id="btn-fresh-list">New study list</button>
+    <button id="btn-test-intact">Test intact pair</button>
+    <button id="btn-test-recomb" class="secondary">Test recombined pair</button>
+  </div>
+  <div id="ret-display"></div>
+  <div id="ret-result"></div>
+</div>
+</section>
+
+<section id="sim">
+<h2>7. Run the full simulation</h2>
+<p>Following the thesis (Figure 1.3), we run many trials and compare the distribution of matching strengths for intact vs. recombined probes. The default parameters reproduce the original simulation: <em class="var">n</em>=1000, <em class="var">L</em>=8, <em class="var">p</em>=0.5.</p>
+
+<div class="demo">
+  <div class="controls">
+    <label>dimensions <em class="var">n</em>: <input type="range" id="sim-n" min="50" max="2000" step="50" value="1000"><span class="value-readout" id="sim-n-val">1000</span></label>
+    <label>list length <em class="var">L</em>: <input type="range" id="sim-L" min="2" max="20" step="1" value="8"><span class="value-readout" id="sim-L-val">8</span></label>
+    <label>sparsity <em class="var">p</em>: <input type="range" id="sim-p" min="0.1" max="1.0" step="0.05" value="0.5"><span class="value-readout" id="sim-p-val">0.50</span></label>
+    <label>iterations: <input type="range" id="sim-iter" min="100" max="2000" step="100" value="500"><span class="value-readout" id="sim-iter-val">500</span></label>
+    <button id="btn-sim">Run simulation</button>
+  </div>
+  <canvas id="hist" width="1440" height="640"></canvas>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(45,95,181,0.6)"></span>intact pairs</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:rgba(217,122,61,0.6)"></span>recombined pairs</span>
+    <span class="legend-item"><span class="legend-swatch" style="background:transparent;border:2px dashed #1a1a1a"></span>condition mean</span>
+  </div>
+  <div id="sim-summary" class="result-box" style="display:none;"></div>
+  <p class="note">Set <em class="var">p</em> = 1.0 to disable masking entirely (the classical vector model). The two distributions should collapse onto each other — the model can no longer tell intact from recombined pairs.</p>
+</div>
+</section>
+
+<section id="predictions">
+<h2>8. Behavioral predictions</h2>
+<p>Two predictions follow from the masked vector model, both tested in Chapters 2–3:</p>
+
+<h3>Item recognition: relational influence <em>hurts</em> hits</h3>
+<p>Suppose you studied <em>MUSCLE–CALF</em>. The mask selected CALF's "leg-muscle" features. At test, CALF appears alone — without MUSCLE to pull out the leg-muscle face, CALF's <em>dominant</em> "baby cow" features come to mind. The probe and the stored trace activate different dimensions; the mismatch lowers matching strength, and you're more likely to <em>miss</em> a studied item.</p>
+
+<h3>Associative recognition: relational influence <em>helps</em> correct rejections</h3>
+<p>You studied <em>MUSCLE–CALF</em> and <em>GOLF–ARCH</em>. The test asks about <em>GOLF–CALF</em>. The mask this never-studied pair would activate (perhaps the foot-arch features of CALF) sits in different dimensions than the leg-muscle features actually stored. Low overlap → confident rejection.</p>
+
+<p>Same mechanism, opposite consequences. Whether intact participants <em>actually use</em> this mechanism is the empirical question the rest of the thesis tackles — and, spoiler from the abstract: the experimental results were largely null.</p>
+</section>
+
+<div class="footnote">
+Built from Chapter 1 of Sergio R. Barra Rodriguez, <em>Relational influence on item and associative recognition</em> (M.Sc. thesis, University of Alberta, 2024). Equations and simulation parameters follow Caplan, Chakravarty, &amp; Dittmann (2022) and the proof-of-concept simulation in Figure 1.3. Materials: <a href="https://osf.io/skxyp/">osf.io/skxyp</a>.
+</div>
+
+</div>
+
+<script>
+// ===== Math utilities =====
+function gaussian(mu, sigma) {
+  let u1 = Math.random(), u2 = Math.random();
+  while (u1 === 0) u1 = Math.random();
+  return mu + sigma * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+function makeVector(n) {
+  const sigma = 1 / Math.sqrt(n);
+  const v = new Float64Array(n);
+  for (let i = 0; i < n; i++) v[i] = gaussian(0, sigma);
+  return v;
+}
+function makeMask(n, p) {
+  const w = new Uint8Array(n);
+  for (let i = 0; i < n; i++) w[i] = Math.random() < p ? 1 : 0;
+  return w;
+}
+function applyMask(v, w) {
+  const n = v.length;
+  const out = new Float64Array(n);
+  for (let i = 0; i < n; i++) out[i] = v[i] * w[i];
+  return out;
+}
+function addVecs(a, b) {
+  const n = a.length;
+  const out = new Float64Array(n);
+  for (let i = 0; i < n; i++) out[i] = a[i] + b[i];
+  return out;
+}
+function dot(a, b) {
+  let s = 0;
+  for (let i = 0; i < a.length; i++) s += a[i] * b[i];
+  return s;
+}
+
+// ===== Cell coloring =====
+function cellColor(v, scale) {
+  const t = Math.min(1, Math.abs(v) / scale);
+  const alpha = 0.12 + t * 0.85;
+  if (Math.abs(v) < 1e-9) return "#efeee8";
+  if (v > 0) return `rgba(45, 95, 181, ${alpha.toFixed(3)})`;
+  return `rgba(217, 122, 61, ${alpha.toFixed(3)})`;
+}
+function maskColor(w) {
+  return w === 1 ? "rgba(217, 122, 61, 0.85)" : "#efeee8";
+}
+
+function renderVector(v, scale) {
+  const cells = Array.from(v).map(val => `<div class="cell" style="background:${cellColor(val, scale)}" title="${val.toFixed(3)}"></div>`).join("");
+  return `<div class="vector-cells">${cells}</div>`;
+}
+function renderMask(w) {
+  const cells = Array.from(w).map(val => `<div class="cell" style="background:${maskColor(val)}"></div>`).join("");
+  return `<div class="vector-cells">${cells}</div>`;
+}
+function vecScale(v) {
+  let max = 0;
+  for (let i = 0; i < v.length; i++) max = Math.max(max, Math.abs(v[i]));
+  return max || 1;
+}
+
+// ===== Section 2: Items as vectors =====
+const VEC_DEMO_N = 40;
+function renderVecDemo() {
+  const a = makeVector(VEC_DEMO_N);
+  const b = makeVector(VEC_DEMO_N);
+  const scale = Math.max(vecScale(a), vecScale(b));
+  document.getElementById("vec-display").innerHTML = `
+    <div class="vector-row"><div class="vector-label">a =</div>${renderVector(a, scale)}</div>
+    <div class="vector-row"><div class="vector-label">b =</div>${renderVector(b, scale)}</div>
+  `;
+  document.getElementById("vec-dot").textContent = "a · b = " + dot(a, b).toFixed(4);
+}
+document.getElementById("btn-regen-vec").addEventListener("click", renderVecDemo);
+renderVecDemo();
+
+// ===== Section 3: The bag problem =====
+const BAG_N = 40;
+let bagItems = null;
+let bagSelected = 0;
+function newBagItems() {
+  bagItems = {
+    a: makeVector(BAG_N),
+    b: makeVector(BAG_N),
+    c: makeVector(BAG_N),
+    d: makeVector(BAG_N)
+  };
+  renderBagDemo();
+}
+function renderBagDemo() {
+  const { a, b, c, d } = bagItems;
+  const m = addVecs(addVecs(a, b), addVecs(c, d));
+  const scale = Math.max(vecScale(a), vecScale(b), vecScale(c), vecScale(d), vecScale(m));
+
+  const probes = [
+    { label: "A–B", v: addVecs(a, b), studied: true },
+    { label: "C–D", v: addVecs(c, d), studied: true },
+    { label: "A–D", v: addVecs(a, d), studied: false },
+    { label: "C–B", v: addVecs(c, b), studied: false }
+  ];
+  probes.forEach(p => p.s = dot(m, p.v));
+  const maxAbs = Math.max(...probes.map(p => Math.abs(p.s))) || 1;
+
+  let html = "";
+  ["a", "b", "c", "d"].forEach(name => {
+    html += `<div class="vector-row"><div class="vector-label">${name} =</div>${renderVector(bagItems[name], scale)}</div>`;
+  });
+  html += `<div class="vector-row" style="margin-top:14px;border-top:1px solid #e5e5e0;padding-top:14px"><div class="vector-label" style="font-weight:600">m =</div>${renderVector(m, scale)}</div>`;
+  html += `<p class="note" style="margin-top:14px"><strong>m</strong> is the bag. It would look exactly the same if the study list had been <em>A–D</em> and <em>C–B</em> instead of <em>A–B</em> and <em>C–D</em> — addition has no memory of who came with whom.</p>`;
+
+  html += `<p style="margin-top:18px;margin-bottom:8px"><strong>Matching strength for each candidate probe</strong> <span class="note">(click a row to inspect the inner product)</span>:</p>`;
+  probes.forEach((p, i) => {
+    const wPct = (Math.abs(p.s) / maxAbs * 100).toFixed(1);
+    const badgeClass = p.studied ? "" : "warm";
+    const badgeText = p.studied ? "studied" : "recombined";
+    const barColor = p.studied ? "rgba(45,95,181,0.6)" : "rgba(217,122,61,0.6)";
+    const selClass = i === bagSelected ? (p.studied ? "selected" : "selected recomb-sel") : "";
+    html += `<div class="probe-row ${selClass}" data-idx="${i}" style="display:grid;grid-template-columns:80px 110px 1fr 70px;gap:10px;align-items:center;margin:4px 0;font-size:0.92rem">
+      <div style="font-family:'STIX Two Math',Georgia,serif;font-style:italic">s(${p.label})</div>
+      <div><span class="badge ${badgeClass}">${badgeText}</span></div>
+      <div style="background:#f1efe8;border-radius:3px;height:18px;position:relative;overflow:hidden">
+        <div style="position:absolute;left:0;top:0;height:100%;width:${wPct}%;background:${barColor};border-radius:3px"></div>
+      </div>
+      <div class="value-readout" style="text-align:right">${p.s.toFixed(3)}</div>
+    </div>`;
+  });
+
+  // ===== Inner product breakdown for selected probe =====
+  const sel = probes[bagSelected];
+  const products = new Float64Array(BAG_N);
+  for (let j = 0; j < BAG_N; j++) products[j] = m[j] * sel.v[j];
+  const prodScale = vecScale(products);
+  const posCount = Array.from(products).filter(v => v > 1e-12).length;
+  const negCount = Array.from(products).filter(v => v < -1e-12).length;
+  const runningSum = sel.s;
+
+  html += `<div style="margin-top:22px;padding:16px;background:#fafaf5;border-radius:6px;border:1px solid #e8e6dd">
+    <p style="margin:0 0 12px;font-size:0.95rem"><strong>Inner product, dimension-by-dimension</strong> for probe <em style="font-style:italic">${sel.label}</em>:</p>
+    <div class="vector-row" style="margin:6px 0"><div class="vector-label">m =</div>${renderVector(m, scale)}</div>
+    <div class="vector-row" style="margin:6px 0"><div class="vector-label">probe =</div>${renderVector(sel.v, scale)}</div>
+    <div class="vector-row" style="margin:6px 0;padding-top:8px;border-top:1px dashed #d0cec5"><div class="vector-label">m<sub>j</sub> · probe<sub>j</sub> =</div>${renderVector(products, prodScale)}</div>
+    <p class="note" style="margin:10px 0 6px;font-size:0.83rem">
+      Same-sign cells (both blue or both orange in the rows above) yield a <span style="color:#2d5fb5;font-weight:600">positive</span> product;
+      opposite-sign cells yield a <span style="color:#d97a3d;font-weight:600">negative</span> product.
+      Sum across all ${BAG_N} dimensions to get s.
+    </p>
+    <div style="display:grid;grid-template-columns:auto auto;gap:6px 18px;margin-top:10px;font-size:0.88rem">
+      <div>positive contributions:</div><div class="value-readout" style="color:#2d5fb5">${posCount} / ${BAG_N}</div>
+      <div>negative contributions:</div><div class="value-readout" style="color:#d97a3d">${negCount} / ${BAG_N}</div>
+      <div style="font-weight:600;padding-top:6px;border-top:1px solid #d0cec5">s(${sel.label}) = Σ m<sub>j</sub> · probe<sub>j</sub> =</div>
+      <div class="value-readout" style="font-weight:700;padding-top:6px;border-top:1px solid #d0cec5;font-size:1rem">${runningSum.toFixed(4)}</div>
+    </div>
+  </div>`;
+  html += `<p class="note" style="margin-top:14px">Generate new items repeatedly: studied and recombined probes will hover at similar magnitudes — the classical vector model can't reliably tell them apart.</p>`;
+
+  document.getElementById("bag-display").innerHTML = html;
+  document.querySelectorAll("#bag-display .probe-row").forEach(row => {
+    row.addEventListener("click", () => {
+      bagSelected = parseInt(row.getAttribute("data-idx"));
+      renderBagDemo();
+    });
+  });
+}
+document.getElementById("btn-bag-regen").addEventListener("click", newBagItems);
+newBagItems();
+
+// ===== Section 4: Mask demo =====
+const MASK_DEMO_N = 40;
+let maskDemoVec = makeVector(MASK_DEMO_N);
+function renderMaskDemo() {
+  const p = parseFloat(document.getElementById("mask-p").value);
+  document.getElementById("mask-p-val").textContent = p.toFixed(2);
+  const w = makeMask(MASK_DEMO_N, p);
+  const masked = applyMask(maskDemoVec, w);
+  const scale = vecScale(maskDemoVec);
+  document.getElementById("mask-display").innerHTML = `
+    <div class="vector-row"><div class="vector-label">f =</div>${renderVector(maskDemoVec, scale)}</div>
+    <div class="vector-row"><div class="vector-label">w =</div>${renderMask(w)}</div>
+    <div class="vector-row"><div class="vector-label">f ⊗ w =</div>${renderVector(masked, scale)}</div>
+  `;
+}
+document.getElementById("mask-p").addEventListener("input", renderMaskDemo);
+document.getElementById("btn-regen-mask").addEventListener("click", () => {
+  maskDemoVec = makeVector(MASK_DEMO_N);
+  renderMaskDemo();
+});
+renderMaskDemo();
+
+// ===== Section 5: Encoding =====
+const ENC_N = 40;
+function renderEncoding() {
+  const L = parseInt(document.getElementById("enc-L").value);
+  const p = parseFloat(document.getElementById("enc-p").value);
+  document.getElementById("enc-L-val").textContent = L;
+  document.getElementById("enc-p-val").textContent = p.toFixed(2);
+
+  const pairs = [];
+  const m = new Float64Array(ENC_N);
+  for (let i = 0; i < L; i++) {
+    const g = makeVector(ENC_N);
+    const f = makeVector(ENC_N);
+    const w = makeMask(ENC_N, p);
+    const contrib = applyMask(addVecs(g, f), w);
+    for (let j = 0; j < ENC_N; j++) m[j] += contrib[j];
+    pairs.push({ g, f, w, contrib });
+  }
+  const allVals = pairs.flatMap(p => Array.from(p.contrib)).concat(Array.from(m));
+  const scale = Math.max(...allVals.map(v => Math.abs(v))) || 1;
+
+  let html = "";
+  pairs.forEach((p, i) => {
+    html += `<div class="vector-row" style="margin-top:${i === 0 ? '0' : '6px'}">
+      <div class="vector-label">(g<sub>${i+1}</sub>+f<sub>${i+1}</sub>)⊗w<sub>${i+1}${i+1}</sub> =</div>
+      ${renderVector(p.contrib, scale)}
+    </div>`;
+  });
+  html += `<div class="vector-row" style="margin-top:18px;border-top:1px solid #e5e5e0;padding-top:14px">
+    <div class="vector-label" style="font-weight:600">m =</div>
+    ${renderVector(m, scale)}
+  </div>`;
+  document.getElementById("enc-display").innerHTML = html;
+}
+document.getElementById("enc-L").addEventListener("input", renderEncoding);
+document.getElementById("enc-p").addEventListener("input", renderEncoding);
+document.getElementById("btn-encode").addEventListener("click", renderEncoding);
+renderEncoding();
+
+// ===== Section 6: Retrieval =====
+const RET_N = 40;
+const RET_L = 4;
+const RET_P = 0.5;
+let retList = null;
+
+function buildRetList() {
+  const pairs = [];
+  const m = new Float64Array(RET_N);
+  for (let i = 0; i < RET_L; i++) {
+    const g = makeVector(RET_N);
+    const f = makeVector(RET_N);
+    const w = makeMask(RET_N, RET_P);
+    const contrib = applyMask(addVecs(g, f), w);
+    for (let j = 0; j < RET_N; j++) m[j] += contrib[j];
+    pairs.push({ g, f, w });
+  }
+  retList = { pairs, m };
+  renderRetList();
+  document.getElementById("ret-result").innerHTML = "";
+}
+
+function renderRetList() {
+  const labels = ["A–B", "C–D", "E–F", "G–H"];
+  const maskedVecs = retList.pairs.map(p => applyMask(addVecs(p.g, p.f), p.w));
+  let scale = vecScale(retList.m);
+  maskedVecs.forEach(v => { scale = Math.max(scale, vecScale(v)); });
+
+  let html = `<p style="margin-top:0;margin-bottom:10px"><strong>Studied pairs</strong> (each contributes its masked sum to m):</p>`;
+  retList.pairs.forEach((p, i) => {
+    html += `<div class="vector-row" style="grid-template-columns:140px 1fr">
+      <div class="vector-label" style="text-align:right">
+        <span class="badge" style="margin-right:6px">${labels[i]}</span>
+        <span style="font-style:italic">(g<sub>${i+1}</sub>+f<sub>${i+1}</sub>)⊗w<sub>${i+1}${i+1}</sub></span>
+      </div>
+      ${renderVector(maskedVecs[i], scale)}
+    </div>`;
+  });
+  html += `<div class="vector-row" style="margin-top:14px;border-top:1px solid #e5e5e0;padding-top:14px;grid-template-columns:140px 1fr">
+    <div class="vector-label" style="text-align:right;font-weight:600">m =</div>
+    ${renderVector(retList.m, scale)}
+  </div>`;
+  document.getElementById("ret-display").innerHTML = html;
+}
+
+function testProbe(kind) {
+  if (!retList) buildRetList();
+  let probe, label, gIdx, fIdx, wDesc;
+  const labels = ["A–B", "C–D", "E–F", "G–H"];
+  if (kind === "intact") {
+    const i = Math.floor(Math.random() * RET_L);
+    gIdx = i; fIdx = i;
+    const p = retList.pairs[i];
+    probe = applyMask(addVecs(p.g, p.f), p.w);
+    label = labels[i] + " (intact)";
+    wDesc = `w<sub>${i+1}${i+1}</sub>`;
+  } else {
+    let i = Math.floor(Math.random() * RET_L);
+    let j = Math.floor(Math.random() * RET_L);
+    while (j === i) j = Math.floor(Math.random() * RET_L);
+    gIdx = i; fIdx = j;
+    const left = labels[i].split("–")[0];
+    const right = labels[j].split("–")[1];
+    label = left + "–" + right + " (recombined)";
+    const wRecomb = makeMask(RET_N, RET_P);
+    probe = applyMask(addVecs(retList.pairs[i].g, retList.pairs[j].f), wRecomb);
+    wDesc = "w<sub>recomb</sub>";
+  }
+  const s = dot(retList.m, probe);
+  const cls = kind === "intact" ? "" : "recomb";
+  const overlap = countOverlap(probe, retList.m);
+  document.getElementById("ret-result").innerHTML = `
+    <div class="result-box ${cls}">
+      <div><strong>Probe:</strong> ${label}, masked with ${wDesc}</div>
+      <div style="margin-top:6px">matching strength <span class="stat">s = ${s.toFixed(4)}</span></div>
+      <div class="note" style="margin-top:8px">${overlap} of ${RET_N} dimensions are non-zero in both the probe and m.</div>
+    </div>
+  `;
+}
+function countOverlap(probe, m) {
+  let c = 0;
+  for (let i = 0; i < probe.length; i++) {
+    if (Math.abs(probe[i]) > 1e-12 && Math.abs(m[i]) > 1e-12) c++;
+  }
+  return c;
+}
+document.getElementById("btn-fresh-list").addEventListener("click", buildRetList);
+document.getElementById("btn-test-intact").addEventListener("click", () => testProbe("intact"));
+document.getElementById("btn-test-recomb").addEventListener("click", () => testProbe("recomb"));
+buildRetList();
+
+// ===== Section 7: Full simulation =====
+function runSimulation(n, L, p, iters) {
+  const intact = new Float64Array(iters);
+  const recomb = new Float64Array(iters);
+  for (let it = 0; it < iters; it++) {
+    const gs = [], fs = [], ws = [];
+    for (let i = 0; i < L; i++) {
+      gs.push(makeVector(n));
+      fs.push(makeVector(n));
+      ws.push(makeMask(n, p));
+    }
+    const m = new Float64Array(n);
+    for (let i = 0; i < L; i++) {
+      for (let j = 0; j < n; j++) {
+        m[j] += (gs[i][j] + fs[i][j]) * ws[i][j];
+      }
+    }
+    // intact: use first pair
+    let sI = 0;
+    for (let j = 0; j < n; j++) sI += m[j] * (gs[0][j] + fs[0][j]) * ws[0][j];
+    intact[it] = sI;
+    // recombined: pair g0 with f1 under a fresh mask
+    const wR = makeMask(n, p);
+    let sR = 0;
+    for (let j = 0; j < n; j++) sR += m[j] * (gs[0][j] + fs[1][j]) * wR[j];
+    recomb[it] = sR;
+  }
+  return { intact: Array.from(intact), recomb: Array.from(recomb) };
+}
+
+function setupCanvasHiDPI(canvas) {
+  const ratio = window.devicePixelRatio || 1;
+  const cssW = canvas.clientWidth;
+  const cssH = cssW * (640 / 1440);
+  canvas.style.height = cssH + "px";
+  canvas.width = Math.floor(cssW * ratio);
+  canvas.height = Math.floor(cssH * ratio);
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  return { ctx, W: cssW, H: cssH };
+}
+
+function mean(arr) {
+  let s = 0;
+  for (let i = 0; i < arr.length; i++) s += arr[i];
+  return s / arr.length;
+}
+function std(arr, mu) {
+  let s = 0;
+  for (let i = 0; i < arr.length; i++) s += (arr[i] - mu) * (arr[i] - mu);
+  return Math.sqrt(s / arr.length);
+}
+
+function drawHistogram(intact, recomb) {
+  const canvas = document.getElementById("hist");
+  const { ctx, W, H } = setupCanvasHiDPI(canvas);
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, W, H);
+
+  const all = intact.concat(recomb);
+  const lo0 = Math.min(...all), hi0 = Math.max(...all);
+  const pad = (hi0 - lo0) * 0.08 || 0.1;
+  const lo = lo0 - pad, hi = hi0 + pad;
+  const nBins = 36;
+  const bw = (hi - lo) / nBins;
+
+  function bin(arr) {
+    const bins = new Array(nBins).fill(0);
+    arr.forEach(v => {
+      const i = Math.min(nBins - 1, Math.max(0, Math.floor((v - lo) / bw)));
+      bins[i]++;
+    });
+    return bins;
+  }
+  const bI = bin(intact), bR = bin(recomb);
+  const maxC = Math.max(...bI, ...bR);
+
+  const margin = { top: 18, right: 14, bottom: 38, left: 44 };
+  const plotW = W - margin.left - margin.right;
+  const plotH = H - margin.top - margin.bottom;
+
+  // gridlines
+  ctx.strokeStyle = "#eee";
+  ctx.lineWidth = 1;
+  for (let g = 1; g <= 4; g++) {
+    const y = margin.top + (plotH * g) / 5;
+    ctx.beginPath();
+    ctx.moveTo(margin.left, y);
+    ctx.lineTo(margin.left + plotW, y);
+    ctx.stroke();
+  }
+
+  // bars
+  const barW = plotW / nBins;
+  for (let i = 0; i < nBins; i++) {
+    const x = margin.left + i * barW;
+    const hI = (bI[i] / maxC) * plotH;
+    const hR = (bR[i] / maxC) * plotH;
+    ctx.fillStyle = "rgba(45, 95, 181, 0.55)";
+    ctx.fillRect(x, margin.top + plotH - hI, barW - 1, hI);
+    ctx.fillStyle = "rgba(217, 122, 61, 0.55)";
+    ctx.fillRect(x, margin.top + plotH - hR, barW - 1, hR);
+  }
+
+  // axes
+  ctx.strokeStyle = "#1a1a1a";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(margin.left, margin.top);
+  ctx.lineTo(margin.left, margin.top + plotH);
+  ctx.lineTo(margin.left + plotW, margin.top + plotH);
+  ctx.stroke();
+
+  // x labels
+  ctx.fillStyle = "#4a4a45";
+  ctx.font = "11px -apple-system, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  for (let t = 0; t <= 5; t++) {
+    const v = lo + (hi - lo) * t / 5;
+    const x = margin.left + plotW * t / 5;
+    ctx.fillText(v.toFixed(2), x, margin.top + plotH + 6);
+  }
+
+  // x axis title
+  ctx.font = "12px -apple-system, system-ui, sans-serif";
+  ctx.fillText("matching strength s", margin.left + plotW / 2, H - 14);
+
+  // y axis title
+  ctx.save();
+  ctx.translate(12, margin.top + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = "center";
+  ctx.fillText("count", 0, 0);
+  ctx.restore();
+
+  // means
+  const mI = mean(intact), mR = mean(recomb);
+  function vline(v, color) {
+    const x = margin.left + ((v - lo) / (hi - lo)) * plotW;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(x, margin.top);
+    ctx.lineTo(x, margin.top + plotH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  vline(mI, "#2d5fb5");
+  vline(mR, "#d97a3d");
+
+  return { mI, mR, sI: std(intact, mI), sR: std(recomb, mR) };
+}
+
+function bindReadout(id) {
+  const el = document.getElementById(id);
+  const valEl = document.getElementById(id + "-val");
+  el.addEventListener("input", () => {
+    const v = parseFloat(el.value);
+    valEl.textContent = id === "sim-p" ? v.toFixed(2) : Math.round(v).toString();
+  });
+}
+["sim-n", "sim-L", "sim-p", "sim-iter"].forEach(bindReadout);
+
+document.getElementById("btn-sim").addEventListener("click", () => {
+  const btn = document.getElementById("btn-sim");
+  btn.disabled = true;
+  btn.textContent = "Running…";
+  const n = parseInt(document.getElementById("sim-n").value);
+  const L = parseInt(document.getElementById("sim-L").value);
+  const p = parseFloat(document.getElementById("sim-p").value);
+  const iters = parseInt(document.getElementById("sim-iter").value);
+  setTimeout(() => {
+    const t0 = performance.now();
+    const { intact, recomb } = runSimulation(n, L, p, iters);
+    const stats = drawHistogram(intact, recomb);
+    const dt = ((performance.now() - t0) / 1000).toFixed(2);
+    const sep = (stats.mI - stats.mR);
+    const cohen = sep / Math.sqrt(0.5 * (stats.sI * stats.sI + stats.sR * stats.sR));
+    const summary = document.getElementById("sim-summary");
+    summary.style.display = "block";
+    summary.innerHTML = `
+      <div><strong>Intact</strong>: mean <span class="stat">${stats.mI.toFixed(4)}</span>, sd <span class="stat">${stats.sI.toFixed(4)}</span></div>
+      <div><strong>Recombined</strong>: mean <span class="stat">${stats.mR.toFixed(4)}</span>, sd <span class="stat">${stats.sR.toFixed(4)}</span></div>
+      <div style="margin-top:6px">Separation: <span class="stat">Δ = ${sep.toFixed(4)}</span> &nbsp; (Cohen's <em>d</em> ≈ <span class="stat">${cohen.toFixed(2)}</span>) &nbsp; · &nbsp; ${iters} iterations in ${dt}s</div>
+      ${p === 1.0 ? `<div class="note" style="margin-top:6px">With p = 1.00 there is no masking — distributions overlap, as the classical vector model predicts.</div>` : ""}
+    `;
+    btn.disabled = false;
+    btn.textContent = "Run simulation";
+  }, 30);
+});
+
+// initial empty plot
+window.addEventListener("load", () => {
+  const canvas = document.getElementById("hist");
+  const { ctx, W, H } = setupCanvasHiDPI(canvas);
+  ctx.fillStyle = "#fff";
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#8a8a85";
+  ctx.font = "13px -apple-system, system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("Press \"Run simulation\" to populate the plot", W / 2, H / 2);
+});
+window.addEventListener("resize", () => {
+  // simple: redraw empty if no data
+});
+</script>
+</body>
+</html>
