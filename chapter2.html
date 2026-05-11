@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Norming Study — Chapter 2, Interactive</title>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+    background: #fafaf7;
+    color: #1a1a1a;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+  }
+  .site-nav {
+    background: #fff;
+    border-bottom: 1px solid #e5e5e0;
+    padding: 12px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+  }
+  .nav-link {
+    color: #6a6a65;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 4px 12px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-link:hover { color: #2d5fb5; background: #f5f5ee; }
+  .nav-link.active { color: #2d5fb5; background: #eff3fa; }
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 24px 120px;
+  }
+  header {
+    border-bottom: 1px solid #e5e5e0;
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+  }
+  h1 {
+    font-size: 2.1rem;
+    margin: 0 0 6px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .subtitle { color: #6a6a65; margin: 0; font-size: 1rem; }
+  h2 {
+    font-size: 1.45rem;
+    margin: 56px 0 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin: 22px 0 8px;
+    font-weight: 600;
+    color: #2d2d2d;
+  }
+  p { margin: 12px 0; }
+  em.var { font-style: italic; font-family: "STIX Two Math", Georgia, serif; }
+  .demo {
+    background: #fff;
+    border: 1px solid #e5e5e0;
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin: 24px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .toc {
+    background: #f1efe8;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 32px;
+  }
+  .toc ol {
+    margin: 8px 0 0;
+    padding-left: 22px;
+    columns: 2;
+    column-gap: 24px;
+    font-size: 0.92rem;
+  }
+  .toc a { color: #2d5fb5; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  .question-card {
+    background: #fff;
+    border: 1px solid #e5e5e0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .question-card:hover {
+    border-color: #c9d4e8;
+    box-shadow: 0 2px 6px rgba(45,95,181,0.08);
+  }
+  .question-card .qhead {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .qnum {
+    background: #2d5fb5;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.92rem;
+    flex-shrink: 0;
+  }
+  .qtitle { font-weight: 600; font-size: 1rem; }
+
+  .trial-stage {
+    background: #fafaf5;
+    border: 1px dashed #c9c5b6;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    margin: 14px 0;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .trial-target {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #1a1a1a;
+    margin: 14px 0;
+  }
+  .trial-prompt {
+    color: #4a4a45;
+    margin: 8px 0;
+    font-size: 0.95rem;
+  }
+  .trial-comparator {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d5fb5;
+    letter-spacing: 0.05em;
+    margin: 8px 0;
+  }
+  .trial-options {
+    text-align: left;
+    margin-top: 12px;
+    width: 100%;
+    max-width: 440px;
+  }
+  .trial-option {
+    background: #fff;
+    border: 1px solid #e5e5e0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 6px 0;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.92rem;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .trial-option:hover { border-color: #2d5fb5; background: #f7faff; }
+  .trial-option.chosen { border-color: #2d5fb5; background: #eff3fa; }
+  .trial-option .opt-num {
+    background: #f1efe8;
+    color: #4a4a45;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .trial-feedback {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #f1efe8;
+    border-left: 3px solid #2d5fb5;
+    border-radius: 4px;
+    font-size: 0.88rem;
+    color: #2d2d2d;
+    text-align: left;
+    width: 100%;
+    max-width: 460px;
+  }
+
+  button {
+    background: #2d5fb5;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.15s;
+    font-family: inherit;
+  }
+  button:hover { background: #234a93; }
+  button.secondary { background: #d97a3d; }
+  button.secondary:hover { background: #b8632e; }
+  button.ghost {
+    background: transparent;
+    color: #2d5fb5;
+    border: 1px solid #2d5fb5;
+  }
+  button.ghost:hover { background: #eff3fa; }
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 12px 0;
+  }
+  label {
+    font-size: 0.9rem;
+    color: #4a4a45;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  input[type="range"] { width: 130px; accent-color: #2d5fb5; }
+
+  /* Histogram styling */
+  .hist-block {
+    margin: 18px 0;
+    padding: 16px;
+    background: #fafaf5;
+    border-radius: 8px;
+    border: 1px solid #e8e6dd;
+  }
+  .hist-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .hist-title {
+    font-weight: 600;
+    font-size: 0.98rem;
+  }
+  .hist-passing {
+    font-size: 0.85rem;
+    color: #4a4a45;
+  }
+  .hist-passing .num {
+    font-weight: 700;
+    font-family: "SF Mono", Menlo, monospace;
+    color: #2d5fb5;
+  }
+  .hist-canvas-wrap {
+    position: relative;
+    height: 110px;
+    background: #fff;
+    border-radius: 4px;
+    padding: 6px 10px 4px;
+    border: 1px solid #ebe8db;
+  }
+  .hist-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 1px;
+    height: 100%;
+  }
+  .hist-bar {
+    flex: 1 1 0;
+    background: rgba(45,95,181,0.55);
+    transition: background 0.15s;
+    border-radius: 2px 2px 0 0;
+    min-height: 2px;
+  }
+  .hist-bar.screened {
+    background: rgba(170,168,160,0.45);
+  }
+  .hist-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: #6a6a65;
+    margin-top: 4px;
+    font-family: "SF Mono", Menlo, monospace;
+  }
+  .hist-threshold-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 60px;
+    gap: 12px;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 0.85rem;
+  }
+  .hist-threshold-row .label-text { color: #4a4a45; }
+  .hist-threshold-row input[type="range"] { width: 100%; }
+  .hist-threshold-row .threshold-value {
+    font-family: "SF Mono", Menlo, monospace;
+    font-weight: 600;
+    color: #d97a3d;
+    text-align: right;
+    font-size: 0.88rem;
+  }
+  .reset-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0 4px;
+  }
+  .funnel-summary {
+    background: #fff;
+    border: 2px solid #2d5fb5;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0 6px;
+    font-size: 0.95rem;
+  }
+  .funnel-summary .num {
+    font-weight: 700;
+    color: #2d5fb5;
+    font-family: "SF Mono", Menlo, monospace;
+  }
+  .funnel-summary .delta {
+    font-size: 0.82rem;
+    color: #6a6a65;
+    margin-left: 6px;
+  }
+
+  .crit-card {
+    background: #fbf0e6;
+    border-left: 4px solid #d97a3d;
+    padding: 16px 20px;
+    margin: 18px 0;
+    border-radius: 4px;
+  }
+  .crit-card h3 {
+    margin-top: 0;
+    color: #b8632e;
+  }
+  table.compare {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 0.9rem;
+  }
+  table.compare th, table.compare td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #e8d5c2;
+  }
+  table.compare th {
+    font-weight: 600;
+    color: #4a4a45;
+    background: #faeede;
+  }
+  table.compare tr:last-child td { border-bottom: none; }
+
+  .footnote {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e5e0;
+    font-size: 0.85rem;
+    color: #6a6a65;
+  }
+  .note {
+    font-size: 0.85rem;
+    color: #6a6a65;
+    margin: 8px 0;
+  }
+  blockquote {
+    border-left: 3px solid #d97a3d;
+    margin: 16px 0;
+    padding: 6px 18px;
+    color: #4a4a45;
+    background: #fdfaf3;
+    font-size: 0.95rem;
+  }
+  @media (max-width: 600px) {
+    .toc ol { columns: 1; }
+    .hist-threshold-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="./" class="nav-link">Chapter 1 · The model</a>
+  <a href="chapter2.html" class="nav-link active">Chapter 2 · Norming study</a>
+</nav>
+<div class="container">
+
+<header>
+  <h1>The Norming Study</h1>
+  <p class="subtitle">An interactive walk through Chapter&nbsp;2 of <em>Relational influence on item and associative recognition</em> (Barra Rodriguez, 2024) — with critique</p>
+</header>
+
+<div class="toc">
+  <strong>Sections</strong>
+  <ol>
+    <li><a href="#why">Why a custom norming study?</a></li>
+    <li><a href="#questions">The four screening questions</a></li>
+    <li><a href="#trial">Inside a single trial</a></li>
+    <li><a href="#screens">Set the thresholds yourself</a></li>
+    <li><a href="#crit-participants">Critique 1 · Participants</a></li>
+    <li><a href="#crit-thresholds">Critique 2 · Thresholds</a></li>
+  </ol>
+</div>
+
+<section id="why">
+<h2>1. Why a custom norming study?</h2>
+<p>To manipulate relational influence in the memory experiments, the authors needed homonyms paired with two unambiguous semantic associates — one biasing the dominant meaning, one biasing the non-dominant meaning. The <em>non-dominant</em> pair (e.g., MUSCLE–CALF) is hypothesized to carry higher relational influence because the associate must actively pull attention away from the default meaning.</p>
+<p>Off-the-shelf norms exist (Twilley et al., 1994; Eligio &amp; Kaschak, 2020; Becker, 1980), but the authors argue that a free-association paradigm has a self-undermining problem: the response itself can be ambiguous.</p>
+<blockquote>People may generate SAVE after seeing BANK, but they may not generate BANK after seeing SAVE — instead they may generate HERO. So SAVE alone wouldn't reliably activate the BANK meaning at study time.</blockquote>
+<p>The custom design measures four specific properties under a single consistent procedure, allowing the authors to filter out cases like SAVE.</p>
+</section>
+
+<section id="questions">
+<h2>2. The four screening questions</h2>
+<p>Words flow through four sequential analyses. Failing one removes the word (and often its homonym group) from later analyses.</p>
+
+<div class="question-card">
+  <div class="qhead">
+    <div class="qnum">1</div>
+    <div class="qtitle">How well-known is the word?</div>
+  </div>
+  <p style="margin:6px 0 0;font-size:0.92rem;color:#4a4a45">If most people don't know what COW means, COW can't activate anything in CALF. Words people don't recognize are dropped.</p>
+</div>
+
+<div class="question-card">
+  <div class="qhead">
+    <div class="qnum">2</div>
+    <div class="qtitle">Do the associates relate to their homonym?</div>
+  </div>
+  <p style="margin:6px 0 0;font-size:0.92rem;color:#4a4a45">Verifies that COW reliably evokes a meaning of CALF. Quantified as Yule's <em class="var">Q</em> on a 2×2 of "related to a meaning" judgments vs. an unrelated control word.</p>
+</div>
+
+<div class="question-card">
+  <div class="qhead">
+    <div class="qnum">3</div>
+    <div class="qtitle">Are the associates unambiguous themselves?</div>
+  </div>
+  <p style="margin:6px 0 0;font-size:0.92rem;color:#4a4a45">The crucial check. SAVE relates to BANK, but SAVE itself has multiple senses; if it activates the wrong one (HERO), it can't cue BANK reliably. Measured by reversing the pair — define SAVE first, then judge whether BANK relates to your definition.</p>
+</div>
+
+<div class="question-card">
+  <div class="qhead">
+    <div class="qnum">4</div>
+    <div class="qtitle">Does the homonym have a dominant meaning?</div>
+  </div>
+  <p style="margin:6px 0 0;font-size:0.92rem;color:#4a4a45">A 50/50 homonym wouldn't allow a clean dominant-vs-non-dominant contrast in the memory experiments. Yule's <em class="var">Q</em> on the 2×2 of meaning-A vs. meaning-B associate judgments quantifies the imbalance.</p>
+</div>
+</section>
+
+<section id="trial">
+<h2>3. Inside a single trial</h2>
+<p>Each of the 91 trials in the norming task had two phases: define the target, then judge how a comparator word relates to your definition. Walk through one below.</p>
+
+<div class="demo">
+  <div class="trial-stage" id="trial-stage"></div>
+  <div class="controls" style="justify-content:space-between">
+    <button id="trial-prev" class="ghost">← Back</button>
+    <span id="trial-step-label" class="note" style="margin:0"></span>
+    <button id="trial-next">Next →</button>
+  </div>
+</div>
+</section>
+
+<section id="screens">
+<h2>4. Set the thresholds yourself</h2>
+<p>Each of the four indices was given a screening threshold by inspecting its histogram for a "steep change" — the kind of decision that's easier to second-guess than to defend. The histograms below use simulated data designed to match the qualitative shape of Figure&nbsp;2.3 in the thesis. Drag the sliders to see how the surviving stimulus pool changes.</p>
+<p class="note">The pipeline cascades: failing the unknowability screen drops a homonym <em>and</em> all its associates. If two associates of the same meaning are screened out, the whole homonym group is dropped (since each meaning needs at least one associate).</p>
+
+<div class="demo">
+  <div class="hist-block">
+    <div class="hist-head">
+      <div>
+        <div class="hist-title">Unknowability index</div>
+        <div class="note" style="margin:0">screen out values <strong>above</strong> threshold (these words are too rare)</div>
+      </div>
+      <div class="hist-passing">passing: <span class="num" id="pass-unk">—</span></div>
+    </div>
+    <div class="hist-canvas-wrap"><div class="hist-bars" id="bars-unk"></div></div>
+    <div class="hist-axis"><span>0.0</span><span>0.5</span><span>1.0</span></div>
+    <div class="hist-threshold-row">
+      <span class="label-text">threshold</span>
+      <input type="range" id="thr-unk" min="0" max="1" step="0.01" value="0.05">
+      <span class="threshold-value" id="val-unk">0.05</span>
+    </div>
+  </div>
+
+  <div class="hist-block">
+    <div class="hist-head">
+      <div>
+        <div class="hist-title">Relatedness index (Yule's Q)</div>
+        <div class="note" style="margin:0">screen out values <strong>below</strong> threshold (associate not strongly related)</div>
+      </div>
+      <div class="hist-passing">passing: <span class="num" id="pass-rel">—</span></div>
+    </div>
+    <div class="hist-canvas-wrap"><div class="hist-bars" id="bars-rel"></div></div>
+    <div class="hist-axis"><span>−0.2</span><span>0.4</span><span>1.0</span></div>
+    <div class="hist-threshold-row">
+      <span class="label-text">threshold</span>
+      <input type="range" id="thr-rel" min="-0.2" max="1.0" step="0.01" value="0.7">
+      <span class="threshold-value" id="val-rel">0.70</span>
+    </div>
+  </div>
+
+  <div class="hist-block">
+    <div class="hist-head">
+      <div>
+        <div class="hist-title">Unambiguity index</div>
+        <div class="note" style="margin:0">screen out values <strong>below</strong> threshold (associate has competing meanings)</div>
+      </div>
+      <div class="hist-passing">passing: <span class="num" id="pass-amb">—</span></div>
+    </div>
+    <div class="hist-canvas-wrap"><div class="hist-bars" id="bars-amb"></div></div>
+    <div class="hist-axis"><span>0.0</span><span>0.5</span><span>1.0</span></div>
+    <div class="hist-threshold-row">
+      <span class="label-text">threshold</span>
+      <input type="range" id="thr-amb" min="0" max="1" step="0.01" value="0.5">
+      <span class="threshold-value" id="val-amb">0.50</span>
+    </div>
+  </div>
+
+  <div class="hist-block">
+    <div class="hist-head">
+      <div>
+        <div class="hist-title">Meaning dominance index</div>
+        <div class="note" style="margin:0">screen out values <strong>below</strong> threshold (homonym is too balanced)</div>
+      </div>
+      <div class="hist-passing">passing: <span class="num" id="pass-dom">—</span></div>
+    </div>
+    <div class="hist-canvas-wrap"><div class="hist-bars" id="bars-dom"></div></div>
+    <div class="hist-axis"><span>0.0</span><span>0.5</span><span>1.0</span></div>
+    <div class="hist-threshold-row">
+      <span class="label-text">threshold</span>
+      <input type="range" id="thr-dom" min="0" max="1" step="0.01" value="0.6">
+      <span class="threshold-value" id="val-dom">0.60</span>
+    </div>
+  </div>
+
+  <div class="reset-row">
+    <button id="btn-defaults" class="ghost">Reset to thesis defaults</button>
+    <button id="btn-regen-data" class="secondary">Regenerate simulated data</button>
+  </div>
+  <div class="funnel-summary" id="funnel">
+    Out of <span class="num">91</span> homonyms and <span class="num">364</span> associates, after applying all four screens you'd retain <span class="num" id="final-hom">—</span> homonyms<span class="delta" id="hom-delta"></span> and <span class="num" id="final-asc">—</span> associates<span class="delta" id="asc-delta"></span>.
+  </div>
+  <p class="note" style="margin-top:14px">The thesis's defaults retained <strong>52 homonyms and 104 associates</strong>. Try moving the relatedness or unambiguity threshold by 0.05 in either direction — the surviving pool can swing by 10–20 stimuli, which would cascade through the entire memory experiment design.</p>
+</div>
+</section>
+
+<section id="crit-participants">
+<h2>5. Critique · Participants didn't overlap</h2>
+
+<div class="crit-card">
+<h3>The norming sample isn't the experimental sample.</h3>
+<p style="margin:6px 0">If the value of a custom norming study is that the norms are calibrated to the people you'll later test, this thesis doesn't get that benefit. The four studies drew from different populations entirely:</p>
+<table class="compare">
+  <thead><tr><th>Study</th><th>N (retained)</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td>Norming</td><td>91</td><td>Prolific · English L1 · ≥70% approval</td></tr>
+    <tr><td>Exp 1 — Item Recognition</td><td>140</td><td><strong>U of Alberta intro psych</strong> · course credit</td></tr>
+    <tr><td>Exp 2 — Associative Recognition</td><td>100</td><td>Prolific · same screening as norming</td></tr>
+    <tr><td>Exp 3 — One-list AR</td><td>96</td><td>Prolific · same screening as norming</td></tr>
+  </tbody>
+</table>
+<p style="margin:10px 0 0;font-size:0.9rem">Notably, Experiment 1 used a different recruitment pool entirely. Even where Exp 2/3 share Prolific with the norming study, no individual overlap is enforced.</p>
+<p style="margin:10px 0 0;font-size:0.9rem"><strong>So what is the custom norming study actually for?</strong> The defensible answer is the unambiguity index — the SAVE-versus-HERO check that off-the-shelf free-association norms don't provide. Word frequency and dominance, the other indices, could plausibly have been pulled from existing databases (SUBTLEX, Twilley et al.) without much loss. Re-measuring those is the kind of redundancy that a participant-overlap argument would otherwise justify.</p>
+</div>
+</section>
+
+<section id="crit-thresholds">
+<h2>6. Critique · Thresholds set by eye</h2>
+
+<div class="crit-card">
+<h3>"Steep change" is not an algorithm.</h3>
+<p style="margin:6px 0">Each threshold was placed by visual inspection of its histogram, looking for a knee. No algorithm (e.g., Kneedle, derivative-based detection), no cross-validation, no sensitivity analysis. The thesis is forthright about this for the unambiguity index in particular:</p>
+<blockquote style="background:#faf2e6;border-left-color:#b8632e">
+"This threshold may have been too liberal since it may have allowed words that were close to being too ambiguous to pass. However, we chose this threshold to maximize the size of the stimulus pool."
+</blockquote>
+<p style="margin:6px 0">A second oddity: the framing flips between indices. For unknowability, "above the elbow = outliers we exclude." For the other three, "below the elbow = outliers we exclude." Both are defensible but the rationale isn't symmetric.</p>
+<p style="margin:6px 0"><strong>The interactive in section 4 directly demonstrates the problem:</strong> shifting any threshold by a small amount swings the surviving pool by 10–20 stimuli. Stimulus selection has cascading consequences for any effect size estimated downstream — and in a thesis whose central findings are <em>null</em>, that sensitivity matters more than usual. The thesis design doesn't include a sensitivity analysis showing the predictions are robust to threshold choice.</p>
+</div>
+</section>
+
+<div class="footnote">
+Built from Chapter 2 of Sergio R. Barra Rodriguez, <em>Relational influence on item and associative recognition</em> (M.Sc. thesis, University of Alberta, 2024). Histograms in Section 4 use simulated data calibrated to the qualitative shapes of Figure 2.3; raw norming responses are not bundled with the published thesis. Materials: <a href="https://osf.io/skxyp/">osf.io/skxyp</a>.
+</div>
+
+</div>
+
+<script>
+// ===== Section 3: Trial walkthrough =====
+const trialSteps = [
+  {
+    html: `<div class="trial-prompt">A word appears. Think about its meaning.</div>
+           <div class="trial-target">BANK</div>
+           <div class="trial-prompt">After 1.5 seconds, you can press Enter to continue.</div>`,
+    label: "Step 1 of 4 · Target presented"
+  },
+  {
+    html: `<div class="trial-prompt">You're asked to type a definition for the target.</div>
+           <div class="trial-target">BANK</div>
+           <div style="background:#fff;border:1px solid #c9c5b6;border-radius:6px;padding:10px 14px;width:100%;max-width:360px;text-align:left;font-size:0.92rem;color:#2d2d2d;font-family:'SF Mono',Menlo,monospace">
+             a place where you store your money_
+           </div>
+           <div class="trial-prompt">If you don't know it, you can type "pass" instead.</div>`,
+    label: "Step 2 of 4 · Definition typed"
+  },
+  {
+    html: `<div class="trial-prompt"><strong>Target:</strong> BANK &nbsp;·&nbsp; <strong>Your definition:</strong> "a place where you store your money"</div>
+           <div class="trial-prompt" style="margin-top:8px">A second word — the comparator — appears. How does it relate to your definition?</div>
+           <div class="trial-comparator">MONEY</div>
+           <div class="trial-options" id="opts-host"></div>`,
+    label: "Step 3 of 4 · Choose how MONEY relates",
+    interactive: true
+  },
+  {
+    html: `<div class="trial-prompt">That's one trial. The norming study had 91 of these per participant, with ~10 unique pair types per homonym (different meaning-A and meaning-B associates, plus an unrelated control, presented in normal and reversed order).</div>
+           <div class="trial-prompt" style="margin-top:14px">Across all participants, response patterns are tallied into 2×2 tables and converted into the four indices you'll explore in the next section.</div>`,
+    label: "Step 4 of 4 · Done"
+  }
+];
+
+let trialIdx = 0;
+let trialChoice = null;
+const trialOptions = [
+  { text: "MONEY relates to the same meaning of BANK I just wrote.", feedback: "This is the dominant pattern: MONEY is a strong cue for the financial meaning of BANK. Counts as evidence for relatedness in the same meaning." },
+  { text: "MONEY relates to a different meaning of BANK.", feedback: "Used when the comparator activates a different sense — e.g., if the participant had defined BANK as 'edge of a river' but MONEY still felt related to a different meaning." },
+  { text: "MONEY does not relate to BANK at all.", feedback: "Used for unrelated controls. If selected often for an actual associate, that associate's relatedness index will be low." },
+  { text: "I do not know the definition of MONEY.", feedback: "Counts toward MONEY's unknowability index. Too many of these for one word and it gets screened out in question 1." }
+];
+
+function renderTrial() {
+  const stage = document.getElementById("trial-stage");
+  const step = trialSteps[trialIdx];
+  stage.innerHTML = step.html;
+  document.getElementById("trial-step-label").textContent = step.label;
+  document.getElementById("trial-prev").disabled = trialIdx === 0;
+  document.getElementById("trial-next").disabled = trialIdx === trialSteps.length - 1;
+  if (step.interactive) {
+    const host = document.getElementById("opts-host");
+    trialOptions.forEach((opt, i) => {
+      const div = document.createElement("div");
+      div.className = "trial-option" + (trialChoice === i ? " chosen" : "");
+      div.innerHTML = `<span class="opt-num">${i+1}</span><span>${opt.text}</span>`;
+      div.onclick = () => { trialChoice = i; renderTrial(); };
+      host.appendChild(div);
+    });
+    if (trialChoice !== null) {
+      const fb = document.createElement("div");
+      fb.className = "trial-feedback";
+      fb.innerHTML = `<strong>What this means for the analyses:</strong> ${trialOptions[trialChoice].feedback}`;
+      host.appendChild(fb);
+    }
+  }
+}
+document.getElementById("trial-prev").onclick = () => { if (trialIdx > 0) { trialIdx--; renderTrial(); } };
+document.getElementById("trial-next").onclick = () => { if (trialIdx < trialSteps.length - 1) { trialIdx++; renderTrial(); } };
+renderTrial();
+
+// ===== Section 4: The screening pipeline =====
+
+// Generate simulated norming data — 91 homonyms, 364 associates (4 per homonym, 2 per meaning)
+const N_HOM = 91;
+const N_ASC_PER_HOM = 4; // 2 for meaning A, 2 for meaning B
+
+function genUnknowability() {
+  const r = Math.random();
+  if (r < 0.86) return Math.random() * 0.04;
+  if (r < 0.93) return 0.04 + Math.random() * 0.06;
+  if (r < 0.97) return 0.10 + Math.random() * 0.20;
+  return 0.30 + Math.random() * 0.45;
+}
+function genRelatedness() {
+  const r = Math.random();
+  if (r < 0.62) return 0.82 + Math.random() * 0.18;
+  if (r < 0.78) return 0.65 + Math.random() * 0.17;
+  if (r < 0.88) return 0.45 + Math.random() * 0.20;
+  if (r < 0.95) return 0.20 + Math.random() * 0.25;
+  return -0.15 + Math.random() * 0.35;
+}
+function genUnambiguity() {
+  const r = Math.random();
+  if (r < 0.18) return 0.70 + Math.random() * 0.30;
+  if (r < 0.50) return 0.50 + Math.random() * 0.30;
+  if (r < 0.78) return 0.30 + Math.random() * 0.30;
+  return Math.random() * 0.30;
+}
+function genDominance() {
+  const r = Math.random();
+  if (r < 0.55) return 0.78 + Math.random() * 0.22;
+  if (r < 0.82) return 0.55 + Math.random() * 0.23;
+  if (r < 0.93) return 0.30 + Math.random() * 0.25;
+  return Math.random() * 0.30;
+}
+
+let homonyms = [];
+let associates = [];
+function generateData() {
+  homonyms = [];
+  associates = [];
+  for (let i = 0; i < N_HOM; i++) {
+    homonyms.push({
+      idx: i,
+      unk: genUnknowability(),
+      dom: genDominance()
+    });
+    for (let a = 0; a < N_ASC_PER_HOM; a++) {
+      associates.push({
+        homIdx: i,
+        meaning: a < 2 ? "A" : "B",
+        unk: genUnknowability(),
+        rel: genRelatedness(),
+        amb: genUnambiguity()
+      });
+    }
+  }
+}
+generateData();
+
+// Apply screens cascading
+function applyScreens(thr) {
+  // 1. Homonym unknowability
+  const homKilled = new Set();
+  homonyms.forEach(h => { if (h.unk > thr.unk) homKilled.add(h.idx); });
+  // 2. Associate unknowability + cascade from homonym killed
+  const ascKilled = new Set();
+  associates.forEach((a, i) => {
+    if (homKilled.has(a.homIdx) || a.unk > thr.unk) ascKilled.add(i);
+  });
+  // 3. Associate relatedness
+  associates.forEach((a, i) => {
+    if (!ascKilled.has(i) && a.rel < thr.rel) ascKilled.add(i);
+  });
+  // After relatedness: if both associates of a meaning are killed → kill homonym + remaining
+  function cascadeFromAscLoss() {
+    let changed = true;
+    while (changed) {
+      changed = false;
+      for (let h = 0; h < N_HOM; h++) {
+        if (homKilled.has(h)) continue;
+        // count surviving per meaning
+        const survA = associates.filter((a,i) => a.homIdx === h && a.meaning === "A" && !ascKilled.has(i)).length;
+        const survB = associates.filter((a,i) => a.homIdx === h && a.meaning === "B" && !ascKilled.has(i)).length;
+        if (survA === 0 || survB === 0) {
+          homKilled.add(h);
+          associates.forEach((a, i) => { if (a.homIdx === h) ascKilled.add(i); });
+          changed = true;
+        }
+      }
+    }
+  }
+  cascadeFromAscLoss();
+  // 4. Associate unambiguity
+  associates.forEach((a, i) => {
+    if (!ascKilled.has(i) && a.amb < thr.amb) ascKilled.add(i);
+  });
+  cascadeFromAscLoss();
+  // 5. Homonym dominance — applies to homonyms still alive
+  homonyms.forEach(h => {
+    if (!homKilled.has(h.idx) && h.dom < thr.dom) {
+      homKilled.add(h.idx);
+      associates.forEach((a, i) => { if (a.homIdx === h.idx) ascKilled.add(i); });
+    }
+  });
+  return {
+    homKilled, ascKilled,
+    homAlive: N_HOM - homKilled.size,
+    ascAlive: associates.length - ascKilled.size
+  };
+}
+
+// Histogram rendering
+const N_BINS = 24;
+function buildHist(values, lo, hi) {
+  const bw = (hi - lo) / N_BINS;
+  const bins = new Array(N_BINS).fill(0);
+  values.forEach(v => {
+    const i = Math.min(N_BINS-1, Math.max(0, Math.floor((v - lo) / bw)));
+    bins[i]++;
+  });
+  return { bins, lo, hi, bw };
+}
+function renderHist(barsId, hist, threshold, screenAbove) {
+  const host = document.getElementById(barsId);
+  host.innerHTML = "";
+  const max = Math.max(...hist.bins) || 1;
+  hist.bins.forEach((c, i) => {
+    const binCenter = hist.lo + (i + 0.5) * hist.bw;
+    const screened = screenAbove ? binCenter > threshold : binCenter < threshold;
+    const div = document.createElement("div");
+    div.className = "hist-bar" + (screened ? " screened" : "");
+    div.style.height = (c / max * 100) + "%";
+    host.appendChild(div);
+  });
+}
+
+const DEFAULTS = { unk: 0.05, rel: 0.70, amb: 0.50, dom: 0.60 };
+
+function readThresholds() {
+  return {
+    unk: parseFloat(document.getElementById("thr-unk").value),
+    rel: parseFloat(document.getElementById("thr-rel").value),
+    amb: parseFloat(document.getElementById("thr-amb").value),
+    dom: parseFloat(document.getElementById("thr-dom").value)
+  };
+}
+
+function update() {
+  const thr = readThresholds();
+  // Unknowability hist over all words
+  const allUnk = homonyms.map(h => h.unk).concat(associates.map(a => a.unk));
+  const histUnk = buildHist(allUnk, 0, 1);
+  renderHist("bars-unk", histUnk, thr.unk, true);
+  document.getElementById("val-unk").textContent = thr.unk.toFixed(2);
+  document.getElementById("pass-unk").textContent = allUnk.filter(v => v <= thr.unk).length + " / " + allUnk.length;
+
+  // Relatedness over associates
+  const allRel = associates.map(a => a.rel);
+  const histRel = buildHist(allRel, -0.2, 1.0);
+  renderHist("bars-rel", histRel, thr.rel, false);
+  document.getElementById("val-rel").textContent = thr.rel.toFixed(2);
+  document.getElementById("pass-rel").textContent = allRel.filter(v => v >= thr.rel).length + " / " + allRel.length;
+
+  // Unambiguity over associates
+  const allAmb = associates.map(a => a.amb);
+  const histAmb = buildHist(allAmb, 0, 1);
+  renderHist("bars-amb", histAmb, thr.amb, false);
+  document.getElementById("val-amb").textContent = thr.amb.toFixed(2);
+  document.getElementById("pass-amb").textContent = allAmb.filter(v => v >= thr.amb).length + " / " + allAmb.length;
+
+  // Dominance over homonyms
+  const allDom = homonyms.map(h => h.dom);
+  const histDom = buildHist(allDom, 0, 1);
+  renderHist("bars-dom", histDom, thr.dom, false);
+  document.getElementById("val-dom").textContent = thr.dom.toFixed(2);
+  document.getElementById("pass-dom").textContent = allDom.filter(v => v >= thr.dom).length + " / " + allDom.length;
+
+  // Cascading pipeline
+  const out = applyScreens(thr);
+  document.getElementById("final-hom").textContent = out.homAlive;
+  document.getElementById("final-asc").textContent = out.ascAlive;
+  const hd = out.homAlive - 52, ad = out.ascAlive - 104;
+  document.getElementById("hom-delta").textContent = hd === 0 ? "" : ` (${hd > 0 ? "+" : ""}${hd} vs. thesis 52)`;
+  document.getElementById("asc-delta").textContent = ad === 0 ? "" : ` (${ad > 0 ? "+" : ""}${ad} vs. thesis 104)`;
+}
+
+["thr-unk", "thr-rel", "thr-amb", "thr-dom"].forEach(id => {
+  document.getElementById(id).addEventListener("input", update);
+});
+document.getElementById("btn-defaults").addEventListener("click", () => {
+  document.getElementById("thr-unk").value = DEFAULTS.unk;
+  document.getElementById("thr-rel").value = DEFAULTS.rel;
+  document.getElementById("thr-amb").value = DEFAULTS.amb;
+  document.getElementById("thr-dom").value = DEFAULTS.dom;
+  update();
+});
+document.getElementById("btn-regen-data").addEventListener("click", () => {
+  generateData();
+  update();
+});
+update();
+</script>
+</body>
+</html>
