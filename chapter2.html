@@ -205,6 +205,199 @@
     max-width: 460px;
   }
 
+  /* ===== Faithful experiment stage ===== */
+  .exp-stage {
+    background: #fff;
+    border: 1px solid #d0cec5;
+    border-radius: 8px;
+    min-height: 380px;
+    padding: 36px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    margin: 14px 0;
+  }
+  .exp-context-tag {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    font-size: 0.74rem;
+    color: #8a8a85;
+    font-family: "SF Mono", Menlo, monospace;
+    letter-spacing: 0.04em;
+  }
+  .exp-progress-tag {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    font-size: 0.74rem;
+    color: #8a8a85;
+    font-family: "SF Mono", Menlo, monospace;
+  }
+  .exp-target {
+    font-size: 2.6rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #1a1a1a;
+    margin: 14px 0;
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  .exp-comparator {
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #2d5fb5;
+    margin: 6px 0 12px;
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  .exp-prompt {
+    color: #4a4a45;
+    font-size: 0.95rem;
+    margin: 8px 0;
+    max-width: 480px;
+  }
+  .exp-prompt.muted { color: #9a9a92; font-size: 0.85rem; font-style: italic; }
+  .exp-input {
+    width: 100%;
+    max-width: 440px;
+    padding: 10px 14px;
+    font-size: 1rem;
+    border: 1px solid #c9c5b6;
+    border-radius: 6px;
+    font-family: inherit;
+    margin: 12px 0 6px;
+    background: #fafaf5;
+  }
+  .exp-input:focus {
+    outline: none;
+    border-color: #2d5fb5;
+    background: #fff;
+    box-shadow: 0 0 0 3px #eff3fa;
+  }
+  .exp-defn-display {
+    font-style: italic;
+    color: #4a4a45;
+    background: #f7f5ee;
+    padding: 8px 14px;
+    border-radius: 4px;
+    margin: 10px 0 14px;
+    font-size: 0.92rem;
+    max-width: 480px;
+    border-left: 3px solid #c9c5b6;
+    text-align: left;
+  }
+  .exp-defn-display .lbl {
+    color: #8a8a85;
+    font-style: normal;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+  .exp-options {
+    width: 100%;
+    max-width: 520px;
+    text-align: left;
+    margin-top: 10px;
+  }
+  .exp-option {
+    background: #fafaf5;
+    border: 1px solid #e5e5e0;
+    border-radius: 6px;
+    padding: 11px 14px;
+    margin: 6px 0;
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+    font-size: 0.93rem;
+    transition: all 0.12s;
+    align-items: flex-start;
+  }
+  .exp-option:hover { border-color: #2d5fb5; background: #f7faff; }
+  .exp-option.chosen {
+    border-color: #2d5fb5;
+    background: #eff3fa;
+  }
+  .exp-option .opt-key {
+    background: #fff;
+    color: #2d5fb5;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    border: 1px solid #c9d4e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.86rem;
+    font-family: "SF Mono", Menlo, monospace;
+    flex-shrink: 0;
+  }
+  .exp-option.chosen .opt-key { background: #2d5fb5; color: #fff; border-color: #2d5fb5; }
+  .exp-feedback {
+    background: #f7f5ee;
+    border-left: 3px solid #d97a3d;
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #2d2d2d;
+    text-align: left;
+    margin: 14px 0 6px;
+    max-width: 540px;
+  }
+  .exp-feedback .lbl {
+    font-weight: 600;
+    color: #b8632e;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .exp-summary {
+    background: #fff;
+    border: 1px solid #e5e5e0;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 14px 0;
+  }
+  .exp-summary-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0eee5;
+    font-size: 0.9rem;
+  }
+  .exp-summary-row:last-child { border-bottom: none; }
+  .exp-summary-row .pair {
+    font-weight: 600;
+    font-family: -apple-system, system-ui, sans-serif;
+    letter-spacing: 0.04em;
+    color: #1a1a1a;
+  }
+  .exp-summary-row .resp { color: #4a4a45; }
+  .exp-controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .kbd {
+    display: inline-block;
+    background: #f1efe8;
+    border: 1px solid #d0cec5;
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.78rem;
+    color: #4a4a45;
+    margin: 0 2px;
+  }
+
   button {
     background: #2d5fb5;
     color: white;
@@ -418,7 +611,7 @@
   <ol>
     <li><a href="#why">Why a custom norming study?</a></li>
     <li><a href="#questions">The four screening questions</a></li>
-    <li><a href="#trial">Inside a single trial</a></li>
+    <li><a href="#trial">Try the task yourself</a></li>
     <li><a href="#screens">Set the thresholds yourself</a></li>
     <li><a href="#crit-participants">Critique 1 · Participants</a></li>
     <li><a href="#crit-thresholds">Critique 2 · Thresholds</a></li>
@@ -471,15 +664,15 @@
 </section>
 
 <section id="trial">
-<h2>3. Inside a single trial</h2>
-<p>Each of the 91 trials in the norming task had two phases: define the target, then judge how a comparator word relates to your definition. Walk through one below.</p>
+<h2>3. Try the task yourself</h2>
+<p>The actual study had 91 trials per participant. Below is a faithful re-implementation of five of them, drawn from the homonym sets the thesis actually uses. The procedure follows section 2.1.3 of the thesis: see a target word, wait 1.5 seconds, type a definition (or "pass"), then judge how a comparator word relates to that definition with one of four options.</p>
+<p class="note">Use the keyboard if you'd like — <span class="kbd">Enter</span> to advance and submit, <span class="kbd">1</span>–<span class="kbd">4</span> to pick an option. (You can also click.)</p>
 
 <div class="demo">
-  <div class="trial-stage" id="trial-stage"></div>
-  <div class="controls" style="justify-content:space-between">
-    <button id="trial-prev" class="ghost">← Back</button>
-    <span id="trial-step-label" class="note" style="margin:0"></span>
-    <button id="trial-next">Next →</button>
+  <div class="exp-stage" id="exp-stage"></div>
+  <div class="exp-controls-row">
+    <span class="note" id="exp-status" style="margin:0"></span>
+    <button id="btn-restart" class="ghost">Restart</button>
   </div>
 </div>
 </section>
@@ -610,74 +803,277 @@ Built from Chapter 2 of Sergio R. Barra Rodriguez, <em>Relational influence on i
 </div>
 
 <script>
-// ===== Section 3: Trial walkthrough =====
-const trialSteps = [
+// ===== Section 3: Faithful task demo =====
+// Stimuli drawn from the OSF Chapter 2 README (BANK group: A=RIVER/SHORE, B=MONEY/SAVE)
+// and the thesis's own examples (CALF / COW / MUSCLE; BOOK practice with STORY/SCHEDULE).
+const expTrials = [
   {
-    html: `<div class="trial-prompt">A word appears. Think about its meaning.</div>
-           <div class="trial-target">BANK</div>
-           <div class="trial-prompt">After 1.5 seconds, you can press Enter to continue.</div>`,
-    label: "Step 1 of 4 · Target presented"
+    target: "BOOK",
+    comparators: ["STORY", "SCHEDULE"],
+    isPractice: true,
+    contextTag: "PRACTICE",
+    mcAlwaysShown: true,
+    info: "Practice trial. The actual study randomly chose STORY or SCHEDULE as the comparator. On practice trials only, the multiple-choice screen is shown even if the participant typed \"pass\"."
   },
   {
-    html: `<div class="trial-prompt">You're asked to type a definition for the target.</div>
-           <div class="trial-target">BANK</div>
-           <div style="background:#fff;border:1px solid #c9c5b6;border-radius:6px;padding:10px 14px;width:100%;max-width:360px;text-align:left;font-size:0.92rem;color:#2d2d2d;font-family:'SF Mono',Menlo,monospace">
-             a place where you store your money_
-           </div>
-           <div class="trial-prompt">If you don't know it, you can type "pass" instead.</div>`,
-    label: "Step 2 of 4 · Definition typed"
+    target: "CALF",
+    comparator: "COW",
+    contextTag: "NORMAL · meaning A",
+    info: "Counts toward COW's relatedness index for CALF (a 2×2 of related/unrelated judgments vs. an unrelated control, summarized via Yule's Q). Also feeds into CALF's meaning-dominance index — was the participant's definition of CALF consistent with the \"baby cow\" sense?"
   },
   {
-    html: `<div class="trial-prompt"><strong>Target:</strong> BANK &nbsp;·&nbsp; <strong>Your definition:</strong> "a place where you store your money"</div>
-           <div class="trial-prompt" style="margin-top:8px">A second word — the comparator — appears. How does it relate to your definition?</div>
-           <div class="trial-comparator">MONEY</div>
-           <div class="trial-options" id="opts-host"></div>`,
-    label: "Step 3 of 4 · Choose how MONEY relates",
-    interactive: true
+    target: "MUSCLE",
+    comparator: "CALF",
+    contextTag: "REVERSED",
+    info: "Reversed pair: the associate (MUSCLE) is the target. Contributes to MUSCLE's unambiguity index — when MUSCLE is defined freely, does CALF still relate to that definition? An associate that scores low here can't reliably cue the right meaning of CALF in the memory experiments."
   },
   {
-    html: `<div class="trial-prompt">That's one trial. The norming study had 91 of these per participant, with ~10 unique pair types per homonym (different meaning-A and meaning-B associates, plus an unrelated control, presented in normal and reversed order).</div>
-           <div class="trial-prompt" style="margin-top:14px">Across all participants, response patterns are tallied into 2×2 tables and converted into the four indices you'll explore in the next section.</div>`,
-    label: "Step 4 of 4 · Done"
+    target: "BANK",
+    comparator: "SAVE",
+    contextTag: "NORMAL · meaning B",
+    info: "Normal pair biasing the financial meaning of BANK (per the OSF README, B-meaning associates are MONEY and SAVE). Feeds SAVE's relatedness for BANK and BANK's meaning-dominance toward meaning B."
+  },
+  {
+    target: "BANK",
+    comparator: "ZEBRA",
+    contextTag: "UNRELATED CONTROL",
+    info: "Unrelated control. Establishes the baseline (column W in the Yule's Q table) — without these trials, the relatedness index for actual associates can't be calibrated against chance."
   }
 ];
 
-let trialIdx = 0;
-let trialChoice = null;
-const trialOptions = [
-  { text: "MONEY relates to the same meaning of BANK I just wrote.", feedback: "This is the dominant pattern: MONEY is a strong cue for the financial meaning of BANK. Counts as evidence for relatedness in the same meaning." },
-  { text: "MONEY relates to a different meaning of BANK.", feedback: "Used when the comparator activates a different sense — e.g., if the participant had defined BANK as 'edge of a river' but MONEY still felt related to a different meaning." },
-  { text: "MONEY does not relate to BANK at all.", feedback: "Used for unrelated controls. If selected often for an actual associate, that associate's relatedness index will be low." },
-  { text: "I do not know the definition of MONEY.", feedback: "Counts toward MONEY's unknowability index. Too many of these for one word and it gets screened out in question 1." }
+let expState = "intro";       // intro | target_wait | target_ready | definition | comparator | feedback | done
+let expIdx = 0;
+let expDef = "";
+let expChosen = null;
+let expActiveComparator = null;
+let expWaitTimer = null;
+let expSummary = [];          // {pair, response}
+
+const optionTexts = (target, comparator) => [
+  `${comparator} relates to the same meaning of ${target} I just wrote.`,
+  `${comparator} relates to a different meaning of ${target}.`,
+  `${comparator} does not relate to ${target}.`,
+  `I do not know the definition of ${comparator}.`
 ];
 
-function renderTrial() {
-  const stage = document.getElementById("trial-stage");
-  const step = trialSteps[trialIdx];
-  stage.innerHTML = step.html;
-  document.getElementById("trial-step-label").textContent = step.label;
-  document.getElementById("trial-prev").disabled = trialIdx === 0;
-  document.getElementById("trial-next").disabled = trialIdx === trialSteps.length - 1;
-  if (step.interactive) {
-    const host = document.getElementById("opts-host");
-    trialOptions.forEach((opt, i) => {
-      const div = document.createElement("div");
-      div.className = "trial-option" + (trialChoice === i ? " chosen" : "");
-      div.innerHTML = `<span class="opt-num">${i+1}</span><span>${opt.text}</span>`;
-      div.onclick = () => { trialChoice = i; renderTrial(); };
-      host.appendChild(div);
+function clearWait() { if (expWaitTimer) { clearTimeout(expWaitTimer); expWaitTimer = null; } }
+
+function renderExp() {
+  const stage = document.getElementById("exp-stage");
+  const status = document.getElementById("exp-status");
+  const trial = expTrials[expIdx];
+  stage.innerHTML = "";
+
+  if (expState === "intro") {
+    status.textContent = "";
+    stage.innerHTML = `
+      <div class="exp-prompt" style="font-size:1.05rem;color:#1a1a1a;margin-bottom:14px">
+        Welcome. You'll do <strong>5 trials</strong>, drawn from the actual norming study.
+      </div>
+      <div class="exp-prompt" style="text-align:left;max-width:520px">
+        On each trial:
+        <ol style="text-align:left;padding-left:22px;margin:8px 0">
+          <li>A word — the <strong>target</strong> — appears for at least 1.5 seconds.</li>
+          <li>You type a definition for it (or type <strong>pass</strong> if you don't know it).</li>
+          <li>A second word — the <strong>comparator</strong> — appears with four options. Choose how the comparator relates to the definition you wrote.</li>
+        </ol>
+      </div>
+      <div class="exp-prompt muted" style="margin-top:16px">Press <span class="kbd">Enter</span> to begin.</div>
+    `;
+    return;
+  }
+
+  if (expState === "done") {
+    status.textContent = "Done · 5 / 5 trials";
+    let rows = expSummary.map(s => `
+      <div class="exp-summary-row">
+        <span class="pair">${s.target} → ${s.comparator}</span>
+        <span class="resp">${s.response}</span>
+      </div>
+    `).join("");
+    stage.innerHTML = `
+      <div class="exp-prompt" style="font-size:1.05rem;color:#1a1a1a;margin:0 0 12px">All five trials complete.</div>
+      <div class="exp-summary" style="width:100%;max-width:560px;text-align:left">
+        <div class="note" style="margin:0 0 6px">Your responses:</div>
+        ${rows}
+      </div>
+      <div class="exp-prompt muted" style="margin-top:14px">In the real study, this was 91 trials. Across participants, response patterns get tallied into 2×2 tables and converted into the four indices in the next section.</div>
+    `;
+    return;
+  }
+
+  status.textContent = `Trial ${expIdx + 1} / ${expTrials.length}` + (trial.isPractice ? " · practice" : "");
+
+  // Context tag (top-left) and trial counter (top-right)
+  const ctxTag = `<div class="exp-context-tag">${trial.contextTag}</div>
+                  <div class="exp-progress-tag">${expIdx + 1} / ${expTrials.length}</div>`;
+  stage.innerHTML = ctxTag;
+
+  if (expState === "target_wait" || expState === "target_ready") {
+    stage.innerHTML += `
+      <div class="exp-prompt">Look at the target word and think about its meaning.</div>
+      <div class="exp-target">${trial.target}</div>
+      <div class="exp-prompt muted">${expState === "target_ready" ? `Press <span class="kbd">Enter</span> to continue.` : "..."}</div>
+    `;
+    return;
+  }
+
+  if (expState === "definition") {
+    stage.innerHTML += `
+      <div class="exp-prompt">Type a definition for <strong>${trial.target}</strong>. If you don't know it, type <strong>pass</strong>.</div>
+      <div class="exp-target" style="font-size:1.8rem">${trial.target}</div>
+      <input class="exp-input" id="exp-defn-input" autocomplete="off" placeholder="your definition…" value="${escapeAttr(expDef)}">
+      <div class="exp-prompt muted">Press <span class="kbd">Enter</span> to submit.</div>
+    `;
+    setTimeout(() => {
+      const inp = document.getElementById("exp-defn-input");
+      if (inp) {
+        inp.focus();
+        inp.addEventListener("input", e => { expDef = e.target.value; });
+      }
+    }, 0);
+    return;
+  }
+
+  if (expState === "comparator") {
+    const opts = optionTexts(trial.target, expActiveComparator);
+    const optsHTML = opts.map((t, i) => `
+      <div class="exp-option ${expChosen === i ? "chosen" : ""}" data-opt="${i}">
+        <span class="opt-key">${i + 1}</span><span>${t}</span>
+      </div>
+    `).join("");
+    stage.innerHTML += `
+      <div class="exp-defn-display">
+        <div class="lbl">target: ${trial.target} &middot; your definition</div>
+        ${escapeHTML(expDef) || "<em>(empty)</em>"}
+      </div>
+      <div class="exp-prompt">How does the comparator relate to your definition?</div>
+      <div class="exp-comparator">${expActiveComparator}</div>
+      <div class="exp-options">${optsHTML}</div>
+      <div class="exp-prompt muted" style="margin-top:8px">Press <span class="kbd">1</span>, <span class="kbd">2</span>, <span class="kbd">3</span>, or <span class="kbd">4</span>.</div>
+    `;
+    stage.querySelectorAll(".exp-option").forEach(el => {
+      el.addEventListener("click", () => {
+        expChosen = parseInt(el.getAttribute("data-opt"));
+        commitChoice();
+      });
     });
-    if (trialChoice !== null) {
-      const fb = document.createElement("div");
-      fb.className = "trial-feedback";
-      fb.innerHTML = `<strong>What this means for the analyses:</strong> ${trialOptions[trialChoice].feedback}`;
-      host.appendChild(fb);
-    }
+    return;
+  }
+
+  if (expState === "feedback") {
+    const opts = optionTexts(trial.target, expActiveComparator);
+    const respText = expChosen === null
+      ? `passed (definition was "pass")`
+      : `chose ${expChosen + 1}: "${opts[expChosen]}"`;
+    stage.innerHTML += `
+      <div class="exp-prompt" style="font-size:1.05rem;color:#1a1a1a">Trial recorded.</div>
+      <div class="exp-feedback">
+        <span class="lbl">What this trial contributes</span>
+        ${trial.info}
+      </div>
+      <div class="exp-prompt muted">Press <span class="kbd">Enter</span> for the next trial.</div>
+    `;
+    return;
   }
 }
-document.getElementById("trial-prev").onclick = () => { if (trialIdx > 0) { trialIdx--; renderTrial(); } };
-document.getElementById("trial-next").onclick = () => { if (trialIdx < trialSteps.length - 1) { trialIdx++; renderTrial(); } };
-renderTrial();
+
+function escapeHTML(s) { return (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+function escapeAttr(s) { return escapeHTML(s); }
+
+function startTrial() {
+  expDef = "";
+  expChosen = null;
+  const trial = expTrials[expIdx];
+  expActiveComparator = trial.comparators
+    ? trial.comparators[Math.floor(Math.random() * trial.comparators.length)]
+    : trial.comparator;
+  expState = "target_wait";
+  renderExp();
+  clearWait();
+  expWaitTimer = setTimeout(() => {
+    if (expState === "target_wait") {
+      expState = "target_ready";
+      renderExp();
+    }
+  }, 1500);
+}
+
+function submitDefinition() {
+  const trial = expTrials[expIdx];
+  const isPass = expDef.trim().toLowerCase() === "pass";
+  if (isPass && !trial.mcAlwaysShown) {
+    expSummary.push({ target: trial.target, comparator: expActiveComparator, response: "passed (definition unknown) — MC skipped" });
+    expState = "feedback";
+  } else {
+    expState = "comparator";
+  }
+  renderExp();
+}
+
+function commitChoice() {
+  const trial = expTrials[expIdx];
+  const opts = optionTexts(trial.target, expActiveComparator);
+  const isPass = expDef.trim().toLowerCase() === "pass";
+  const respDesc = isPass
+    ? `passed; chose ${expChosen + 1} on practice MC`
+    : `${expChosen + 1}: ${opts[expChosen].slice(0, 80)}${opts[expChosen].length > 80 ? "…" : ""}`;
+  expSummary.push({ target: trial.target, comparator: expActiveComparator, response: respDesc });
+  expState = "feedback";
+  renderExp();
+}
+
+function advanceFromFeedback() {
+  if (expIdx < expTrials.length - 1) {
+    expIdx += 1;
+    startTrial();
+  } else {
+    expState = "done";
+    renderExp();
+  }
+}
+
+document.addEventListener("keydown", e => {
+  // Only act when the experiment section is visible-ish (always true on this page)
+  const tag = e.target && e.target.tagName;
+  const inInput = (tag === "INPUT" || tag === "TEXTAREA");
+
+  if (expState === "intro" && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault(); expIdx = 0; expSummary = []; startTrial(); return;
+  }
+  if (expState === "target_ready" && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault(); expState = "definition"; renderExp(); return;
+  }
+  if (expState === "definition" && e.key === "Enter") {
+    e.preventDefault(); submitDefinition(); return;
+  }
+  if (expState === "comparator" && !inInput) {
+    if (["1", "2", "3", "4"].includes(e.key)) {
+      e.preventDefault();
+      expChosen = parseInt(e.key) - 1;
+      commitChoice();
+      return;
+    }
+  }
+  if (expState === "feedback" && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault(); advanceFromFeedback(); return;
+  }
+  if (expState === "done" && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault(); restartExp(); return;
+  }
+});
+
+function restartExp() {
+  clearWait();
+  expIdx = 0;
+  expState = "intro";
+  expSummary = [];
+  expDef = "";
+  expChosen = null;
+  renderExp();
+}
+document.getElementById("btn-restart").addEventListener("click", restartExp);
+renderExp();
 
 // ===== Section 4: The screening pipeline =====
 
